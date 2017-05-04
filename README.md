@@ -34,7 +34,7 @@ root gradle:
 
 第二步：
 
-	compile 'com.github.huangyanbin:CacheOkttpUtils:7820d5bd18'
+	compile 'com.github.huangyanbin:CacheOkttpUtils:v1.0'
 
 **1.首先初始化建议在Application onCreate();**
 
