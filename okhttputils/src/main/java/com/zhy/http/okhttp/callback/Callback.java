@@ -95,5 +95,13 @@ public abstract class Callback<T>
         }
     };
 
+    /**
+     * 成功的时候是否回到主线程
+     * @return
+     */
+    public boolean backMainThread(){
+        return true;
+    }
+
 
 }

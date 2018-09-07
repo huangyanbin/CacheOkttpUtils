@@ -1,5 +1,6 @@
 package com.zhy.http.okhttp;
 
+import android.os.Looper;
 import android.util.Log;
 
 import com.zhy.http.okhttp.builder.GetBuilder;
@@ -257,17 +258,33 @@ public class OkHttpUtils
     public void sendSuccessResultCallback(final Object object, final Callback callback, final int id)
     {
         if (callback == null) return;
-        mPlatform.execute(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                callback.onResponse(object, id);
-                callback.onAfter(id);
-            }
-        });
+        if(callback.backMainThread()) {
+            mPlatform.execute(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onResponse(object, id);
+                    callback.onAfter(id);
+                }
+            });
+        }else {
+            Log.e("huang","isOnMainThread"+isOnMainThread());
+            callback.onResponse(object, id);
+            mPlatform.execute(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onAfter(id);
+                }
+            });
+        }
     }
 
+    /**
+     * 判断是否在当前主线程
+     * @return
+     */
+    public static boolean isOnMainThread(){
+        return Thread.currentThread() == Looper.getMainLooper().getThread();
+    }
     /**
      * 缓存的请求返回失败处理
      * @param call
